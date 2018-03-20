@@ -29,7 +29,7 @@ then
           -o auto_unmount \
           -o uid="$UID" \
           -o gid="$GID" \
-          -p "$PORT" \
+          -o port="$PORT" \
           "$@" /mount
 else
     sshfs -f \
@@ -43,6 +43,6 @@ else
           -o auto_unmount \
           -o uid="$UID" \
           -o gid="$GID" \
-          -p "$PORT" \
+          -o port="$PORT" \
           "$@" /mount
 fi
