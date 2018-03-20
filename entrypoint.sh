@@ -4,6 +4,7 @@
 
 UID="${UID:-0}"
 GID="${GID:-0}"
+PORT="${PORT:-22}"
 
 # sync and unmount on shutdown
 trap cleanup SIGHUP SIGINT SIGQUIT SIGABRT SIGTERM
@@ -28,6 +29,7 @@ then
           -o auto_unmount \
           -o uid="$UID" \
           -o gid="$GID" \
+          -p "$PORT" \
           "$@" /mount
 else
     sshfs -f \
@@ -41,5 +43,6 @@ else
           -o auto_unmount \
           -o uid="$UID" \
           -o gid="$GID" \
+          -p "$PORT" \
           "$@" /mount
 fi

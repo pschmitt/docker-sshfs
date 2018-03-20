@@ -27,3 +27,14 @@ Set the remote's password via the `SSHPASS` env var.
 
 Use the `IDENTITY_FILE` env variable to set the name of the key. It defaults to
 `/config/id_ed25519`. For an RSA key it should be `/config/id_rsa`.
+
+
+## Options
+
+### Different port
+
+You can use a alternate port by setting the `PORT` env var.
+
+### Compression
+
+TODO: Not implemented yet.
