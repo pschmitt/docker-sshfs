@@ -13,7 +13,7 @@ docker run -it --rm \
     -e GID=100 \
     -v $PWD/mnt:/mount:shared \
     -v ~/.ssh/id_ed25519:/config/id_ed25519:ro \
-    pschmitt/sshfs
+    pschmitt/sshfs \
     root@10.0.0.10:/data
 ```
 
