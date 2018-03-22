@@ -17,6 +17,47 @@ docker run -it --rm \
     root@10.0.0.10:/data
 ```
 
+## Using a jump server
+
+Check out the following `docker-compose.yaml` that mounts 10.127.0.11's `/data` to `$PWD/mnt`, via `home.example.com`.
+
+```yaml
+version: '3'
+
+services:
+  jump-server:
+    image: pschmitt/ssh
+    container_name: jump-server
+    # restart: unless-stopped
+    volumes:
+      - ./config:/config/.ssh:ro
+    command:
+      -o UserKnownHostsFile=/dev/null
+      -o StrictHostKeyChecking=no
+      -o ExitOnForwardFailure=yes
+      -TN -L "*:22222:10.127.0.11:22"
+      root@home.example.com
+
+  sshfs:
+    image: pschmitt/sshfs
+    depends_on:
+      - jump-server
+    # restart: unless-stopped
+    cap_add:
+      - SYS_ADMIN
+    devices:
+      - /dev/fuse:/dev/fuse
+    environment:
+      - PORT=22222
+      - UID=500
+      - GID=1000
+    volumes:
+      - ./config/id_ed25519:/config/id_ed25519:ro
+      - ./mnt:/mount:shared
+    command: pschmitt@jump-server:/data
+```
+
+
 ## Authentification
 
 ### Password auth (discouraged)
