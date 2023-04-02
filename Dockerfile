@@ -1,6 +1,6 @@
 FROM alpine:latest
 
-RUN apk add --no-cache sshfs sshpass && \
+RUN apk add --no-cache bash sshfs sshpass && \
     ln -s /config /root/.ssh
 
 # USER nobody
