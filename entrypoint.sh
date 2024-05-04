@@ -34,7 +34,7 @@ then
 
   if [[ -n "$SSHPASS" ]]
   then
-    CMD=(sshpass -e sshfs "${CMD[@]}")
+    CMD=(sshpass -e "${CMD[@]}")
   fi
 
   exec "${CMD[@]}"
