@@ -3,62 +3,18 @@ name: Build
 on:
   push:
   schedule:
-    - cron:  '0 10 * * *'
+    - cron: '0 10 * * *'
   workflow_dispatch:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-    env:
-      image_name: pschmitt/sshfs
+    uses: pschmitt/ci-workflows/.github/workflows/docker-build.yaml@main
+    permissions:
+      contents: read
+      packages: write
+    with:
+      image-name: pschmitt/sshfs
       platforms: linux/amd64,linux/arm64
-
-    steps:
-      - name: Check out the repository
-        uses: actions/checkout@v7
-
-      - name: Login to Docker Hub
-        uses: docker/login-action@v4
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Log in to the Container registry
-        uses: docker/login-action@v4
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v4
-        with:
-          platforms: ${{ env.platforms }}
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v4
-        with:
-          install: true
-          use: true
-
-      - name: Extract metadata (tags, labels) for Docker
-        id: meta
-        uses: docker/metadata-action@v6
-        with:
-          images: |
-            ${{ env.image_name }}
-            ghcr.io/${{ env.image_name }}
-          tags: |
-            # set latest tag for default branch
-            type=raw,value=latest,enable={{is_default_branch}}
-
-      - name: Build and push
-        uses: docker/build-push-action@v7
-        with:
-          context: .
-          push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          platforms: ${{ env.platforms }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+    secrets:
+      dockerhub_username: ${{ secrets.DOCKERHUB_USERNAME }}
+      dockerhub_password: ${{ secrets.DOCKERHUB_TOKEN }}
